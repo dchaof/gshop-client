@@ -3,7 +3,7 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <div class="swiper-container" id="mySwiper" ref="swiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide">
               <img src="./images/home/banner1.jpg" />
@@ -100,7 +100,32 @@
 </template>
 
 <script>
+import Swiper from 'swiper'
+
 export default {
+  mounted(){
+  // new Swiper ('.swiper-container',{
+new Swiper (this.$refs.swiper,{
+  // direction: 'horizontal', // 水平切换选项
+    loop: true, // 循环模式选项
+    //自动轮播
+    // autoplay:true,
+    autoplay:{
+      delay:4000,
+      disableOnInteraction:false//用户操作后是否停止轮播
+    },
+    // 如果需要分页器
+    pagination: {
+      el: '.swiper-pagination',
+    },
+    
+    // 如果需要前进后退按钮
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+})
+},
   name: "ListContainer",
 };
 </script>

@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from '@/router'
 import store from '@/store'
 import TypeNav from '@/components/TypeNav'
+import 'swiper/css/swiper.css'
 Vue.config.productionTip = false
 
 //全局注册组件

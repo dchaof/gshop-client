@@ -65,11 +65,12 @@ export default {
       // this.$router.push('/search/' + this.keyword + '?keyword2=' + this.keyword.toUpperCase())
 
       let location = {
-        name:'search'
+        name:'search',
+        query:this.$route.query//将当前已有的query参数携带上
       }
       if(this.keyword){
-        location.params = {keyword:this.keyword},
-        location.query = {keyword2:this.keyword.toUpperCase()}
+        location.params = {keyword:this.keyword}
+        // location.query = {keyword2:this.keyword.toUpperCase()}
       }
 
       this.$router.push(location)

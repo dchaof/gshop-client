@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import home from './moudles/home'
-import user from './moudles/user'
+import modules from '@/store/modules'
 
 Vue.use(Vuex)
 const mutations = {
@@ -17,12 +16,13 @@ const getters = {
 }
 
 export default new Vuex.Store({
-    modules:{
+    /* modules:{
         home,
         user
     },
     mutations,
     actions,
-    getters,
+    getters, */
+    modules
     
 })

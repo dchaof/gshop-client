@@ -1,5 +1,6 @@
 <template>
   <div>
+    <type-nav/>
     <p>search页面</p>
     <p>路由params参数：{{$route.params.keyword}}</p>
     <p>路由queryt参数：{{$route.query.keyword2}}</p>
@@ -10,6 +11,7 @@
 </template>
 
 <script>
+import TypeNav from '@/components/TypeNav'
 export default {
   name: 'Search',
   props:['keyword3','keyword4']
