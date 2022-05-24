@@ -3,14 +3,19 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <swiper :options="swiperOptions">
-          <swiper-slide v-for="banner in bannerList" :key="banner.id">
+        <div class="swiper-container" id="mySwiper" ref="swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="banner in bannerList" :key="banner.id">
               <img :src="banner.imageUrl" />
-            </swiper-slide>
-          <div class="swiper-pagination" slot="pagination"></div>
-          <div class="swiper-button-prev" slot="button-prev"></div>
-          <div class="swiper-button-next" slot="button-next"></div>
-        </swiper>
+            </div>
+          </div>
+          <!-- 如果需要分页器 -->
+          <div class="swiper-pagination"></div>
+
+          <!-- 如果需要导航按钮 -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
       </div>
       <div class="right">
         <div class="news">
@@ -89,14 +94,52 @@
 import Swiper from 'swiper'
 import {mapState} from 'vuex'
 export default {
-  
+  mounted(){
+    //swiper对象必须在列表显示之后才有效
+/*      // new Swiper ('.swiper-container',{
+new Swiper (this.$refs.swiper,{
+  // direction: 'horizontal', // 水平切换选项
+    loop: true, // 循环模式选项
+    //自动轮播
+    // autoplay:true,
+    autoplay:{
+      delay:4000,
+      disableOnInteraction:false//用户操作后是否停止轮播
+    },
+    // 如果需要分页器
+    pagination: {
+      el: '.swiper-pagination',
+    },
+    
+    // 如果需要前进后退按钮
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+}) */
+  },
   computed:{
       ...mapState({ bannerList: (state) => state.home.bannerList }),
   },
   name: "ListContainer",
-  data(){
-    return {
-      swiperOptions: {//在此次数据改变导致界面发生变化后执行回调
+  /* 
+  列表数据已经有了，且已经更新显示了
+  数据变化后 => 同步调用监视的回调 => 最后异步更新页面
+  watch 监视bannerList就知道有数据了
+  nextTick页面更新后执行回调
+  */
+  watch:{
+    bannerList(){//此时数据有了但是界面没有更新
+    //swiper对象必须在列表显示之后才有效
+
+    /* 
+    $nextTick(callback)
+    将回调延迟到下次DOM更新循环后执行，在修改数据之后立即使用它，然后等待DOM更新
+    
+    */
+      this.$nextTick(()=>{
+      // new Swiper ('.swiper-container',{
+      new Swiper (this.$refs.swiper,{//在此次数据改变导致界面发生变化后执行回调
         // direction: 'horizontal', // 水平切换选项
           loop: true, // 循环模式选项
           //自动轮播
@@ -115,10 +158,11 @@ export default {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
           },
-      }
+      })
+    })
     }
+     
   }
-
 };
 </script>
 

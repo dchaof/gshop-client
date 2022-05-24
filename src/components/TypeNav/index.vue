@@ -101,6 +101,7 @@ export default {
     // ...mapState(['categoryList'])   不可以
     // ...mapState({categoryList2:'home.categoryList'})   不可以
     ...mapState({ categoryList: (state) => state.home.categoryList }),
+  
   },
   methods: {
     /* 隐藏一级列表 */

@@ -18,3 +18,8 @@ export function reqCategoryList(){
         method:'get'
     })
 }
+
+/* 动态轮播图
+api/cms/banner   get
+*/
+export const reqBannerList = () => ajax('/cms/banner')
