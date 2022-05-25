@@ -4,7 +4,7 @@
     <!-- 大写变小写  在中间添加- -->
     <type-nav></type-nav>
     <ListContainer></ListContainer>
-    <TodayRecommend></TodayRecommend>
+    <TodayRecommend :recommends='recommends'></TodayRecommend>
     <Rank></Rank>
     <Like></Like>
     <Floor v-for="floor in floors" :key='floor.id' :floor='floor'></Floor>
