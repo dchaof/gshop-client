@@ -2,6 +2,7 @@
 包含应用的所有接口的接口请求函数
 
 */
+import mockAjax from './mockAjax'
 import ajax from './ajax'
 
 /* 
@@ -23,3 +24,12 @@ export function reqCategoryList(){
 api/cms/banner   get
 */
 export const reqBannerList = () => ajax('/cms/banner')
+
+
+//mock请求
+export const reqRecommends = () => mockAjax('/recommends')
+export const reqFloors = () => mockAjax('/floors')
+
+/* reqFloors().then(result => {
+    console.log(result.data)
+}) */

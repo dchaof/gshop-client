@@ -1,10 +1,16 @@
 /* 
 管理首页相关数据的vuex子模块
 */
-import {reqCategoryList,reqBannerList} from '@/api'
+import {reqCategoryList,
+        reqBannerList,
+        reqRecommends,
+        reqFloors
+    } from '@/api'
 const state = { 
     categoryList:[],
     bannerList:[],
+    recommends:[],
+    floors:[],
 }
 
 const mutations = {
@@ -16,6 +22,13 @@ const mutations = {
     RECEIVE_BANNER_LIST(state,bannerList){
         state.bannerList = bannerList
     },
+    RECEIVE_RECOMMENDS(state,recommends){
+        state.recommends = recommends
+    },
+    RECEIVE_FLOORS(state,floors){
+        state.floors = floors
+    },
+    
 }
 
 
@@ -45,7 +58,26 @@ async getBannerList({commit}){
         const bannerList = result.data
         commit('RECEIVE_BANNER_LIST',bannerList) 
     }
-}
+},
+
+async getRecommends({commit}){ 
+    //发异步ajax请求（调用接口请求函数）
+    const result = await reqRecommends()
+    //如果请求成功了,得到数据提交给mutation
+    if(result.code === 200){
+        const recommends = result.data
+        commit('RECEIVE_RECOMMENDS',recommends) 
+    }
+},
+async getFloors({commit}){ 
+    //发异步ajax请求（调用接口请求函数）
+    const result = await reqFloors()
+    //如果请求成功了,得到数据提交给mutation
+    if(result.code === 200){
+        const floors = result.data
+        commit('RECEIVE_FLOORS',floors) 
+    }
+},
 
 
 }

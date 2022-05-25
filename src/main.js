@@ -4,6 +4,7 @@ import router from '@/router'
 import store from '@/store'
 import TypeNav from '@/components/TypeNav'
 import './plugins/swiper'
+import './mock/mockServer'
 Vue.config.productionTip = false
 
 //全局注册组件
