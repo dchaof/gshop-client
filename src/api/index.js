@@ -33,3 +33,5 @@ export const reqFloors = () => mockAjax('/floors')
 /* reqFloors().then(result => {
     console.log(result.data)
 }) */
+
+export const reqSearch = (searchParams) => ajax.post('/list',searchParams)
