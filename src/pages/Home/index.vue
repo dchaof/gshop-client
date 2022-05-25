@@ -7,7 +7,7 @@
     <TodayRecommend></TodayRecommend>
     <Rank></Rank>
     <Like></Like>
-    <Floor v-for="floors in floors" :key='floors.id'></Floor>
+    <Floor v-for="floor in floors" :key='floor.id' :floor='floor'></Floor>
     <Brand></Brand>
   </div>
 </template>
