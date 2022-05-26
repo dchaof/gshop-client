@@ -13,11 +13,16 @@
           <ul class="fl sui-tag">
             <li class="with-x" v-if="options.categoryName">{{options.categoryName}}<i @click="removeCategory">×</i></li>
             <li class="with-x" v-if="options.keyword">{{options.keyword}}<i @click="removeKeyword">×</i></li>
+            <li class="with-x" v-if="options.trademark">{{options.trademark}}<i @click="removeTrademark">×</i></li>
+            <li class="with-x" v-for="(prop, index) in options.props" :key="prop" >{{prop}}
+              <i @click="removeProp(index)">×</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <!-- <SearchSelector :setTrademark='setTrademark' @addProp="addProp"/> -->
+        <SearchSelector :setTrademark='setTrademark' :addProp="addProp"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -149,11 +154,43 @@
       }
     },
 
-    created(){
+    /* created(){
       this.updateparams();
       this.getShopList()
-    },
+    }, */
+    //删除品牌
     methods:{
+      //删除属性
+      removeProp(index){
+        //删除props中index属性
+        this.options.props.splice(index,1)
+        //重新请求获取数据列表
+        this.getShopList()
+      },
+      //添加属性
+      addProp(prop){
+        const {props} = this.options
+        //如果已经存在数组条件中，不添加
+        if(props.includes(prop)) return
+        //向props添加一个条件字符串
+        props.push(prop)
+        //重新请求获取数据列表
+        this.getShopList()
+      },
+      removeTrademark(){
+        //重置品牌条件数据
+        this.options.trademark = '';
+        //重新获取数据
+        this.getShopList()
+      },
+      //设置品牌条件
+      setTrademark(trademark){
+        //如果当前品牌已经在条件中了，直接返回
+        if(this.options.trademark == trademark) return 
+        this.options.trademark = trademark
+        //重新获取数据
+        this.getShopList()
+      },
       //删除分类的条件
       removeCategory(){
         this.options.category1Id= ''; 
@@ -199,9 +236,12 @@
       }
     },
     watch:{
-      $route(to,from){
+      $route:{
+        handler(){//监视参数变化
         this.updateparams();
         this.getShopList()
+        },
+        immediate:true //初始化就会执行一次监视的回调  省略create中的代码
       }
     }
   }
