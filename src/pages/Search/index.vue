@@ -11,10 +11,8 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="options.categoryName">{{options.categoryName}}<i @click="removeCategory">×</i></li>
+            <li class="with-x" v-if="options.keyword">{{options.keyword}}<i @click="removeKeyword">×</i></li>
           </ul>
         </div>
 
@@ -129,10 +127,82 @@
       ...mapGetters(['goodsList'])
     },
     mounted(){
-      this.$store.dispatch('getProductList',{
+      /* this.$store.dispatch('getProductList',{
         pageNo:1,
         pageSize:10
-      })
+      }) */
+    },
+    data(){
+      return {
+        options:{
+          category1Id: '', // 一级分类ID
+          category2Id: '', // 二级分类ID
+          category3Id: '', // 三级分类ID
+          categoryName: '', // 分类名称
+          keyword: '', // 搜索关键字
+          trademark: '', // 品牌: "ID:品牌名称" "1:苹果"
+          props: [], // 商品属性的数组: ["属性ID:属性值:属性名"] ["2:6.0～6.24英寸:屏幕尺寸"]
+          order: '1:desc', // 排序方式  1: 综合,2: 价格 asc: 升序,desc: 降序  "1:desc"
+          pageNo: 1, // 页码
+          pageSize: 10, //	每页数量
+        }
+      }
+    },
+
+    created(){
+      this.updateparams();
+      this.getShopList()
+    },
+    methods:{
+      //删除分类的条件
+      removeCategory(){
+        this.options.category1Id= ''; 
+        this.options.category2Id= ''; 
+        this.options.category3Id= ''; 
+        this.options.categoryName= '';
+        //重新获取数据
+        // this.getShopList()
+        this.$router.push({
+          name:'search',
+          params:this.$route.params
+        })
+      },
+      //删除关键字条件
+      removeKeyword(){
+        this.options.keyword = ''
+        //重新获取数据
+        // this.getShopList()
+        // this.$router.push({
+        this.$router.replace({ 
+          name:'search',
+          query:this.$route.query
+        })
+        //在search中分发事件
+        this.$bus.$emit('removeKeyword')
+      },
+      //更新参数
+      updateparams(){
+        let {keyword} = this.$route.params;
+        let {category1Id,category2Id,category3Id,categoryName} = this.$route.query
+        this.options = {
+          ...this.options,
+          keyword,
+          category1Id,
+          category2Id,
+          category3Id,
+          categoryName
+        }
+      },
+      //异步获取商品列表
+      getShopList(){
+        this.$store.dispatch('getProductList',this.options)
+      }
+    },
+    watch:{
+      $route(to,from){
+        this.updateparams();
+        this.getShopList()
+      }
     }
   }
 </script>

@@ -150,7 +150,18 @@ export default {
           query,
           params:this.$route.params//需要携带当前已有的params参数
         }
+        // this.$router.push(location);
+        /* 
+        1.从其他页面跳转到搜索页面用replace
+        2.从search跳转到search用push
+        */
+       if(this.$route.name == 'search'){
+        this.$router.replace(location);
+       }else{
         this.$router.push(location);
+       }
+        //隐藏列表
+        this.hideFirst()
       }
     },
   },

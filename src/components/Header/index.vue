@@ -73,7 +73,16 @@ export default {
         // location.query = {keyword2:this.keyword.toUpperCase()}
       }
 
-      this.$router.push(location)
+      // this.$router.push(location)
+      /* 
+        1.从其他页面跳转到搜索页面用replace
+        2.从search跳转到search用push
+        */
+       if(this.$route.name == 'search'){
+        this.$router.replace(location);
+       }else{
+        this.$router.push(location);
+       }
 
       /* 
       router.push(location, onComplete?, onAbort?)
@@ -85,6 +94,15 @@ export default {
     //方法二： 添加catch回调
     // this.$router.push(location).catch(()=> {})
     }
+  },
+  mounted(){
+    //在Header中绑定自定义事件监听，在回调函数中进行清除数据
+    this.$bus.$on('removeKeyword',()=>{
+      this.keyword = ''
+    })
+  },
+  beforeDestroy(){
+    this.$bus.$off('removeKeyword')
   }
 };
 </script>
