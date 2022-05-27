@@ -11,6 +11,12 @@ const mutations = {
 
 const actions = {
     async getProductList({commit},searchParams){ 
+        searchParams = {...searchParams}
+        Object.keys(searchParams).forEach(key=>{
+            if(searchParams[key] === '' || (Array.isArray(searchParams[key]) && searchParams[key].length == 0)){
+                delete searchParams[key]
+            }
+        })
         //发异步ajax请求（调用接口请求函数）
         const result = await reqSearch(searchParams)
         //如果请求成功了,得到数据提交给mutation
@@ -33,6 +39,9 @@ const getters = {
     //属性列表
     attrsList(state){
         return state.productList.attrsList || []
+    },
+    total(state){
+        return state.productList.total || 0
     },
 }
 

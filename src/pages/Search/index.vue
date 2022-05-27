@@ -29,11 +29,19 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:orderArr[0] === '1'}" @click="setOrder('1')">
+                  <a href="#">
+                    综合<i class="iconfont" 
+                          :class="orderArr[1] ==='desc' ? 'icon-down' : 'icon-up'"
+                          v-if="orderArr[0] === '1'"></i>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
+                <li :class="{active:orderArr[0] === '3'}" @click="setOrder('3')">
+                  <a href="#">
+                    销量<i class="iconfont" 
+                          :class="orderArr[1] ==='desc' ? 'icon-down' : 'icon-up'"
+                          v-if="orderArr[0] === '3'"></i>
+                  </a>
                 </li>
                 <li>
                   <a href="#">新品</a>
@@ -41,11 +49,12 @@
                 <li>
                   <a href="#">评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:orderArr[0] === '2'}"  @click="setOrder('2')">
+                  <a href="#">
+                    价格<i class="iconfont" 
+                          :class="orderArr[1] ==='desc' ? 'icon-down' : 'icon-up'"
+                          v-if="orderArr[0] === '2'"></i>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -80,35 +89,12 @@
               
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <pagination
+            :currentPage="options.pageNo"
+            :total="total"
+            :pageSize="options.pageSize"
+            :showPageNo=3
+          />
         </div>
       </div>
     </div>
@@ -129,7 +115,10 @@
       /* ...mapState({
         goodsList: state => state.search.productList.goodsList
       }), */
-      ...mapGetters(['goodsList'])
+      ...mapGetters(['goodsList','total']),
+      orderArr(){
+        return this.options.order.split(':')
+      }
     },
     mounted(){
       /* this.$store.dispatch('getProductList',{
@@ -160,6 +149,23 @@
     }, */
     //删除品牌
     methods:{
+      //设置新的排序搜索
+      setOrder(orderFlag){
+        //得到当前排序项和排序的方式
+        let [flag,type] = this.orderArr
+        //判断排序项有没有改变没有改变只需要修改排序方式
+        if(orderFlag == flag){
+          type = type==='desc' ? 'asc' : 'desc'
+        }else{
+          //如果排序项改变则修改flag  排序方式默认为desc
+          flag = orderFlag
+          type = 'desc'
+        }
+        //更新order参数
+        this.options.order = flag + ':' + type
+        //重新发送请求获取数据列表
+        this.getShopList()
+      },
       //删除属性
       removeProp(index){
         //删除props中index属性
@@ -180,14 +186,17 @@
       removeTrademark(){
         //重置品牌条件数据
         this.options.trademark = '';
+        //delete this.options.trademark //这种方式不可以导致界面发生改变  不是响应数据
+        //this.$delete(this.options,'trademark')//这种的是响应数据
         //重新获取数据
         this.getShopList()
       },
       //设置品牌条件
       setTrademark(trademark){
         //如果当前品牌已经在条件中了，直接返回
-        if(this.options.trademark == trademark) return 
-        this.options.trademark = trademark
+        if(this.options.trademark == trademark) return
+        // this.$set(this.options,'trademark',trademark) //这种是响应数据
+        this.options.trademark = trademark   //这种方式不可以  改变界面 不是响应数据
         //重新获取数据
         this.getShopList()
       },
