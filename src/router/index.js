@@ -50,5 +50,8 @@ Vue.use(VueRouter)
 
 export default new VueRouter({
     mode:'history',//模式
-    routes
+    routes,
+    scrollBehavior(to,from,savedPosition){
+      return {x:0,y:0}
+    }
 })
