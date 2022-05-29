@@ -1,17 +1,65 @@
 <template>
   <div class="spec-preview">
-    <img src="../images/s1.png" />
-    <div class="event"></div>
-    <div class="big">
-      <img src="../images/s1.png" />
+    <img :src="defaultImg.imgUrl" />
+    <div class="event" @mousemove="move"></div>
+    <div class="big" >
+      <img :src="defaultImg.imgUrl" ref="big"/>
     </div>
-    <div class="mask"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
 <script>
   export default {
     name: "Zoom",
+    props:['imgList'],
+    data(){
+      return {
+        defaultIndex:0
+      }
+    },
+    computed:{
+      defaultImg(){
+        return this.imgList[this.defaultIndex] || {}
+      }
+    },
+    mounted(){
+      this.$bus.$on('syncDefaultIndex',this.syncDefaultIndex)
+    },
+    methods:{
+      syncDefaultIndex(index){
+        this.defaultIndex = index
+      },
+      move(event){
+        //添加了移动事件代表鼠标移动
+        let mouseX = event.offsetX;
+        let mouseY = event.offsetY;
+
+
+        let mask = this.$refs.mask;
+        let big = this.$refs.big
+        let maskX = mouseX - mask.offsetWidth/2;
+        let maskY = mouseY - mask.offsetHeight/2;
+
+        if(maskX < 0){
+          maskX = 0
+        }else if(maskX > mask.offsetWidth){
+          maskX = mask.offsetWidth
+        }
+        if(maskY < 0){
+          maskY = 0
+        }else if(maskY > mask.offsetHeight){
+          maskY = mask.offsetHeight
+        }
+
+        mask.style.left = maskX + 'px';
+        mask.style.top = maskY + 'px';
+
+        big.style.left = -maskX*2 + 'px'
+        big.style.top = -maskY*2 + 'px'
+
+      }
+    }
   }
 </script>
 

@@ -7,31 +7,30 @@
     <section class="con">
       <!-- 导航路径区域 -->
       <div class="conPoin">
-        <span>手机、数码、通讯</span>
-        <span>手机</span>
-        <span>Apple苹果</span>
-        <span>iphone 6S系类</span>
+        <span>{{categoryView.category1Name}}</span>
+        <span>{{categoryView.category2Name}}</span>
+        <span>{{categoryView.category3Name}}</span>
       </div>
       <!-- 主要内容区域 -->
       <div class="mainCon">
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom :imgList="imgList"/>
           <!-- 小图列表 -->
-          <ImageList />
+          <ImageList :imgList="imgList"/>
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
-            <h3 class="InfoName">Apple iPhone 6s（A1700）64G玫瑰金色 移动通信电信4G手机</h3>
-            <p class="news">推荐选择下方[移动优惠购],手机套餐齐搞定,不用换号,每月还有花费返</p>
+            <h3 class="InfoName">{{skuInfo.skuName}}</h3>
+            <p class="news">{{skuInfo.skuDesc}}</p>
             <div class="priceArea">
               <div class="priceArea1">
                 <div class="title">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</div>
                 <div class="price">
                   <i>¥</i>
-                  <em>5299</em>
+                  <em>{{skuInfo.price}}</em>
                   <span>降价通知</span>
                 </div>
                 <div class="remark">
@@ -64,39 +63,24 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl>
-                <dt class="title">选择颜色</dt>
-                <dd changepirce="0" class="active">金色</dd>
-                <dd changepirce="40">银色</dd>
-                <dd changepirce="90">黑色</dd>
-              </dl>
-              <dl>
-                <dt class="title">内存容量</dt>
-                <dd changepirce="0" class="active">16G</dd>
-                <dd changepirce="300">64G</dd>
-                <dd changepirce="900">128G</dd>
-                <dd changepirce="1300">256G</dd>
-              </dl>
-              <dl>
-                <dt class="title">选择版本</dt>
-                <dd changepirce="0" class="active">公开版</dd>
-                <dd changepirce="-1000">移动版</dd>
-              </dl>
-              <dl>
-                <dt class="title">购买方式</dt>
-                <dd changepirce="0" class="active">官方标配</dd>
-                <dd changepirce="-240">优惠移动版</dd>
-                <dd changepirce="-390">电信优惠版</dd>
+              <dl v-for="(spuSaleAttr) in spuSaleAttrList" :key="spuSaleAttr.id">
+                <dt class="title">{{spuSaleAttr.saleAttrName}}</dt>
+                <dd changepirce="0" 
+                v-for="(spuSaleAttrValue) in spuSaleAttr.spuSaleAttrValueList" :key="spuSaleAttrValue.id"
+                @click="changeChecked(spuSaleAttrValue,spuSaleAttr.spuSaleAttrValueList)"
+                :class="{active:spuSaleAttrValue.isChecked === '1'}">
+                {{spuSaleAttrValue.saleAttrValueName}}
+                </dd>
               </dl>
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum" @change="skuNum = skuNum >= 1 ? parseInt(skuNum) : 1 ">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : 1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addShopCar(skuId,skuNum)">加入购物车</a>
               </div>
             </div>
           </div>
@@ -347,6 +331,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import ImageList from './ImageList/ImageList'
   import Zoom from './Zoom/Zoom'
 
@@ -356,6 +341,67 @@
     components: {
       ImageList,
       Zoom
+    },
+    data(){
+      return {
+        skuId:'',
+        skuNum:1
+      }
+    },
+    beforeMount(){
+      this.skuId = this.$route.params.skuId
+    },
+    mounted(){
+      this.getDetailInfo()
+    },
+    computed:{
+      ...mapGetters(['categoryView','skuInfo','spuSaleAttrList']),
+      imgList(){
+        return this.skuInfo.skuImageList || []
+      }
+    },
+    methods:{
+      //获取商品详细信息
+      getDetailInfo(){
+        this.$store.dispatch('getDetailInfo',this.skuId)
+      },
+      //点击改变属性的选择
+      changeChecked(spuSaleAttrValue,spuSaleAttrValueList){
+        spuSaleAttrValueList.forEach(item => item.isChecked = '0')
+        spuSaleAttrValue.isChecked = '1'
+      },
+      //加入购物车
+      async addShopCar(skuId,skuNum){
+        //发请求让后台给购物车数据库添加一条数据
+        //根据添加成功或者失败来决定是否跳转到购物车页面
+        //dispatch分发触发的意思，其实就是调用响应的actions函数
+        //this.$store.dispatch('AddOrUpdateCart',{skuId,skuNum})就是函数调用表达式 结果是
+        //actions异步当中的返回值，异步函数的返回值一定是promise
+        try{
+          const result = await this.$store.dispatch('AddOrUpdateCart',{skuId,skuNum})
+          alert('添加购物车成功')
+          //成功需要跳转  编程式导航跳转
+          //因为下个页面  添加购物车成功页面需要  商品数量和商品详情信息
+          //以后如果碰到参数是简单的那么我们选择路由传参
+          //如果碰到存储复杂的数据  我们考虑存储手段
+          //localStorage setItem  getItem   removeItem  clear
+          //sessionStorage  setItem  getItem  removeItem  clear
+          //区别  localStorage是永久存储  sessionStorage是关闭浏览器就没了
+          sessionStorage.setItem('SKUINFO_KEY',JSON.stringify(this.skuInfo))
+          this.$router.push('/addCartSuccess?skuNum=' + this.skuNum)
+        }catch(error){
+          alert(error.message)
+        }
+
+
+        //只有成功promise的情况
+        /* const result = await this.$store.dispatch('AddOrUpdateCart',{skuId,skuNum})
+        if(result === 'ok'){
+          alert('添加购物车成功')
+        }else{
+          alert('添加购物车失败')
+        } */
+      }
     }
   }
 </script>
