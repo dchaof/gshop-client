@@ -25,14 +25,14 @@
           </li>
           <li class="cart-list-con5">
             <a href="javascript:void(0)" class="mins" @click="changeCartNum(cartInfo,-1,true)">-</a>
-            <input autocomplete="off" type="text" :value="cartInfo.skuNum" minnum="1" class="itxt" @change="changeCartNum(cartInfo,$event.target.value,true)">
+            <input autocomplete="off" type="text" :value="cartInfo.skuNum" minnum="1" class="itxt" @change="changeCartNum(cartInfo,$event.target.value,false)">
             <a href="javascript:void(0)" class="plus" @click="changeCartNum(cartInfo,1,true)">+</a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{cartInfo.cartPrice * cartInfo.skuNum}}</span> 
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="javascript:;" class="sindelet" @click="deleteOne(cartInfo)">删除</a>
             <br>
             <a href="#none">移到收藏</a>
           </li>
@@ -45,7 +45,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a href="javascript:;" @click="deleteAll">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -83,7 +83,7 @@
             disNum = 1 - cartInfo.skuNum
           }
         }else{
-          if(cartInfo.skuNum + disNum <= 1){
+          if(cartInfo.skuNum + disNum < 1){
             disNum = 0
           }
         }
@@ -105,6 +105,26 @@
         } catch (error) {
           alert(error.message)
         }
+      },
+      //删除购物车中某个商品
+      async deleteOne(cartInfo){
+        try {
+          await this.$store.dispatch('deleteCart',cartInfo.skuId)
+          alert('删除成功')
+          this.getCartList();
+        } catch (error) {
+          alert(error.message)
+        }
+      },
+      //删除购物车中选中的商品
+      async deleteAll(){
+        try {
+          await this.$store.dispatch('deleteCartAll')
+          alert('已删除选中的商品')
+          this.getCartList();
+        } catch (error) {
+          alert(error.message)
+        }
       }
     },
     computed:{
@@ -119,7 +139,6 @@
           }
           return prev
         },0)
-        return 1
       },
       allMoney(){
         let cartInfoList = this.cartInfoList || []

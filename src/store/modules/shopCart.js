@@ -1,4 +1,4 @@
-import {reqAddOrUpdateCart,reqCartList,reqUpdateCartChecked} from '@/api'
+import {reqAddOrUpdateCart,reqCartList,reqUpdateCartChecked,requeryDeleteCart} from '@/api'
 
 let state = {
     shopCartList:[]
@@ -10,6 +10,26 @@ let mutations = {
 }
 
 let actions = {
+    //删除购物车中选中的商品
+    async deleteCartAll({commit,dispatch,getters}){
+        let cartInfoList = getters.cartInfoList
+        let promises = []
+        cartInfoList.forEach(item =>{
+            if(!item.isChecked) return 
+            let promise = dispatch('deleteCart',item.skuId);
+            promises.push(promise)
+        })
+        return Promise.all(promises)
+    }, 
+    //删除购物车中的一个商品
+    async deleteCart({commit},skuId){
+        const result = await requeryDeleteCart(skuId)
+        if(result.code === 200){
+            return 'ok'
+        }else{
+            return Promise.reject(new Error('failed'))
+        }
+    },
     //修改购物车全选是否选中
     async updateCartCheckedAll({commit,dispatch,getters},isChecked){
         let cartInfoList = getters.cartInfoList || []
