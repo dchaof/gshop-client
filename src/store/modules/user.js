@@ -3,6 +3,7 @@
 */
 
 import { getUserTempId } from "@/utils/userabout"
+import { reqUserRegister } from "@/api"
 
 const state = {
     //获取临时标识Id
@@ -14,7 +15,14 @@ const mutations = {
 }
 
 const actions = {
-
+    async userRegister({commit},userInfo){
+        let result = await reqUserRegister(userInfo)
+        if(result.code === 200){
+            return 'ok'
+        }else{
+            return Promise.reject(new Error('failed'))
+        }
+    }
 }
 
 const getters = {

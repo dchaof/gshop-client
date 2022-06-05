@@ -85,3 +85,14 @@ export const requeryDeleteCart = (skuId) => {
         method:'delete'
     })
 }
+
+//注册用户信息
+///api/user/passport/register
+//post
+export const reqUserRegister = (userInfo)=>{
+    return ajax({
+        url:'/user/passport/register',
+        method:'post',
+        data:userInfo
+    })
+}
