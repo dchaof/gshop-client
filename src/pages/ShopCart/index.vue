@@ -13,7 +13,7 @@
       <div class="cart-body">
         <ul class="cart-list" v-for="cartInfo in cartInfoList" :key="cartInfo.id"> 
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list" :checked="cartInfo.isChecked">
+            <input type="checkbox" name="chk_list" :checked="cartInfo.isChecked" @click="updateOne(cartInfo)">
           </li>
           <li class="cart-list-con2">
             <img :src="cartInfo.imgUrl">
@@ -42,7 +42,6 @@
     <div class="cart-tool">
       <div class="select-all">
         <input class="chooseAll" type="checkbox" v-model="isAllCheck">
-        <input class="chooseAll" type="checkbox" >
         <span>全选</span>
       </div>
       <div class="option">
@@ -98,6 +97,15 @@
           alert(error.message)
         }
       },
+      async updateOne(cartInfo){
+        try {
+          await this.$store.dispatch('updateCartChecked',{skuId:cartInfo.skuId,isChecked:cartInfo.isChecked?0:1})
+          alert('修改数据成功')
+          this.getCartList();
+        } catch (error) {
+          alert(error.message)
+        }
+      }
     },
     computed:{
       ...mapGetters({

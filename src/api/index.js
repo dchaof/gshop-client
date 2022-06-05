@@ -4,6 +4,7 @@
 */
 import mockAjax from './mockAjax'
 import ajax from './ajax'
+import { method } from 'lodash'
 
 /* 
 首页三级分类
@@ -62,3 +63,16 @@ export const reqCartList = () => {
         method:'get'
     })
 }
+
+
+//修改单个购物车是否选中
+// /api/cart/checkCart/{skuID}/{isChecked}
+// get
+export const reqUpdateCartChecked = (skuId,isChecked) =>{
+    return ajax({
+        url:`/cart/checkCart/${skuId}/${isChecked}`,
+        method:'get'
+    })
+}
+
+
