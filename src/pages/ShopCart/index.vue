@@ -135,7 +135,14 @@
           let cartInfoList = this.cartInfoList || []
            return cartInfoList.every(item => item.isChecked)
         },
-        set(){
+        async set(val){
+          try {
+            await this.$store.dispatch('updateCartCheckedAll',val?1:0)
+            alert('修改成功')
+            this.getCartList();
+          } catch (error) {
+            alert(error.message)
+          }
         }
       }
     }

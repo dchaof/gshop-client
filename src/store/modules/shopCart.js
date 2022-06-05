@@ -10,7 +10,17 @@ let mutations = {
 }
 
 let actions = {
-    
+    //修改购物车全选是否选中
+    async updateCartCheckedAll({commit,dispatch,getters},isChecked){
+        let cartInfoList = getters.cartInfoList || []
+        let promises = []
+        cartInfoList.forEach(item => {
+            if(item.isChecked === isChecked) return 
+            let promise = dispatch('updateCartChecked',{skuId:item.skuId,isChecked:isChecked})
+            promises.push(promise)
+        });
+        return Promise.all(promises)
+    },
     //修改购物车商品是否选中
     async updateCartChecked({commit},{skuId,isChecked}){
         const result = await reqUpdateCartChecked(skuId,isChecked)
