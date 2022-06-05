@@ -11,7 +11,7 @@ axios二次封装
 import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css' 
-
+import store from '@/store'
 
 /*
  配置通用的路径和超时 
@@ -31,6 +31,13 @@ const service = axios.create({
 service.interceptors.request.use((config)=>{
     //显示请求进度条，在请求拦截器中
     NProgress.start()
+    let userTempId = store.state.user.userTempId
+    if(userTempId){
+        config.headers.userTempId = userTempId
+    }
+
+    //再请求头中添加用户的唯一标识
+
 
     //必须返回config
     return config//根据返回的config，使用xhr发送ajax请求

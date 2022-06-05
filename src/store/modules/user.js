@@ -1,9 +1,12 @@
+/* 
+    管理登录用户数据vuex的子模块
+*/
 
-
-
+import { getUserTempId } from "@/utils/userabout"
 
 const state = {
-    userInfo:{}
+    //获取临时标识Id
+    userTempId:getUserTempId()
 }
 
 const mutations = {

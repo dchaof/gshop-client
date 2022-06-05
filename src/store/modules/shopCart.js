@@ -1,9 +1,11 @@
-import {reqAddOrUpdateCart} from '@/api'
+import {reqAddOrUpdateCart,reqCartList} from '@/api'
 let state = {
-
+    shopCartList:[]
 }
 let mutations = {
-
+    RECEIVESHOPCARTLIST(state,shopCartList){
+        state.shopCartList = shopCartList
+    }
 }
 
 let actions = {
@@ -23,10 +25,21 @@ let actions = {
         }else{
             return 'failed'
         } */
+    },
+    //获取购物车列表
+    async getCartList({commit}){
+        const result = await reqCartList();
+        if(result.code === 200){
+            commit('RECEIVESHOPCARTLIST',result.data)
+        }
     }
 }
 
 let getters = {
+    cartInfoList(state){
+        let cartShop = state.shopCartList[0] || {}
+        return cartShop.cartInfoList
+    }
 
 }
 

@@ -45,10 +45,20 @@ export const reqDetailInfo = (skuId) => {
 }
 
 
-//添加购物车
+//添加购物车,修改购物车数据库
 export const reqAddOrUpdateCart = (skuId,skuNum)=>{
     return ajax({
         url:`/cart/addToCart/${skuId }/${skuNum }`,
         method:'post'
+    })
+}
+
+
+//获取购物车列表
+///cart/cartList
+export const reqCartList = () => {
+    return ajax({
+        url:'/cart/cartList',
+        method:'get'
     })
 }
