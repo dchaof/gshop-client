@@ -9,7 +9,7 @@
             <a href="javascript:;">{{$store.state.user.userInfo.name}}</a>
             <!-- <router-link to="/login">登录</router-link> -->
             <!-- <router-link to="/register" class="register">免费注册</router-link> -->
-            <a href="javascript:;" class="register">退出登录</a>
+            <a href="javascript:;" class="register" @click="userLogout">退出登录</a>
           </p>
           <p v-else>
             <span>请</span>
@@ -69,6 +69,10 @@ export default {
     }
   },
   methods:{
+    //退出登录
+    userLogout(){
+      this.$store.dispatch('userLogout')
+    },
     tosearch(){
       //参数字符串形式
       // this.$router.push('/search/' + this.keyword + '?keyword2=' + this.keyword.toUpperCase())

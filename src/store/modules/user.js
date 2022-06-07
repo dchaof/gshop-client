@@ -3,7 +3,7 @@
 */
 
 import { getUserTempId,getUserToken,setUserToken,removeUserToken} from "@/utils/userabout"
-import { reqUserRegister,reqUserLogin,reqUserInfo} from "@/api"
+import { reqUserRegister,reqUserLogin,reqUserInfo,reqUserLogout} from "@/api"
 
 const state = {
     //获取临时标识Id
@@ -62,10 +62,19 @@ const actions = {
     },
 
     //清除用户信息和token
-    async resetUserInfo({commit}){
+    /* async resetUserInfo({commit}){
         removeUserToken()
         commit('RESET_USERINFO')
-    } 
+    }, */
+    
+    //退出登录操作
+    async userLogout({commit}){
+        const result = await reqUserLogout()
+        if(result.code === 200){
+            removeUserToken()
+            commit('RESET_USERINFO')
+        }
+    }
 }
 
 const getters = {

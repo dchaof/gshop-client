@@ -75,7 +75,7 @@ router.beforeEach(
           next()
         } catch (error) {
           alert('token过期了')
-          store.dispatch('resetUserInfo')
+          store.dispatch('userLogout')
           next('/login?redirect='+to.path)
         }
       }
