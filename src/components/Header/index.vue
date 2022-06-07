@@ -5,7 +5,13 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="$store.state.user.userInfo.name">
+            <a href="javascript:;">{{$store.state.user.userInfo.name}}</a>
+            <!-- <router-link to="/login">登录</router-link> -->
+            <!-- <router-link to="/register" class="register">免费注册</router-link> -->
+            <a href="javascript:;" class="register">退出登录</a>
+          </p>
+          <p v-else>
             <span>请</span>
             <!-- <a href="###">登录</a> -->
             <router-link to="/login">登录</router-link>

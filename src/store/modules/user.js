@@ -3,17 +3,25 @@
 */
 
 import { getUserTempId,getUserToken,setUserToken,removeUserToken} from "@/utils/userabout"
-import { reqUserRegister,reqUserLogin} from "@/api"
+import { reqUserRegister,reqUserLogin,reqUserInfo} from "@/api"
 
 const state = {
     //获取临时标识Id
     userTempId:getUserTempId(),
-    token:getUserToken()//先从localstorge中获取token
+    token:getUserToken(),//先从localstorge中获取token
+    userInfo:{},//用户信息
 }
 
 const mutations = {
     RESEIVE_TOKEN(state,token){
         state.token = token
+    },
+    RESEIVE_USERINFO(state,userInfo){
+        state.userInfo = userInfo
+    },
+    RESET_USERINFO(state){
+        state.token = ''
+        state.userInfo = ''
     }
 }
 
@@ -40,7 +48,24 @@ const actions = {
         }else{
             return Promise.reject(new Error('failed'))
         }
-    }
+    },
+
+    //获取用户信息
+    async getUserInfo({commit}){
+        let result = await reqUserInfo()
+        if(result.code === 200){
+            commit('RESEIVE_USERINFO',result.data)
+            return 'ok'
+        }else{
+            return Promise.reject(new Error('failed'))
+        }
+    },
+
+    //清除用户信息和token
+    async resetUserInfo({commit}){
+        removeUserToken()
+        commit('RESET_USERINFO')
+    } 
 }
 
 const getters = {

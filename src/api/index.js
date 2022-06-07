@@ -108,3 +108,16 @@ export const reqUserLogin = (userInfo) => {
         data:userInfo
     })
 }
+
+
+
+//根据token获取用户信息
+//http://182.92.128.115/api/user/passport/auth/getUserInfo
+//get
+
+export const reqUserInfo = () => {
+    return ajax({
+        url:'/user/passport/auth/getUserInfo',
+        method:'get'
+    })
+}

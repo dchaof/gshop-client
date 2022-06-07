@@ -31,12 +31,20 @@ const service = axios.create({
 service.interceptors.request.use((config)=>{
     //显示请求进度条，在请求拦截器中
     NProgress.start()
+
+    //再请求头中添加用户的唯一标识
     let userTempId = store.state.user.userTempId
     if(userTempId){
         config.headers.userTempId = userTempId
     }
 
-    //再请求头中添加用户的唯一标识
+
+    //再请求头中添加token
+    let token = store.state.user.token
+    if(token){
+        config.headers.token = token
+    }
+    
 
 
     //必须返回config

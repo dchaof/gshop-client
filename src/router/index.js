@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './routes'
+import store from '@/store'
 
 
 const originalPush = VueRouter.prototype.push
@@ -48,10 +49,45 @@ VueRouter.prototype.replace = function replace(location, onResolve, onReject) {
 
 Vue.use(VueRouter)
 
-export default new VueRouter({
+let router = new VueRouter({
     mode:'history',//模式
     routes,
     scrollBehavior(to,from,savedPosition){
       return {x:0,y:0}
-    }
+    },
+    
 })
+
+router.beforeEach(
+  async (to, from, next) => {
+  //校验token
+  let token = store.state.user.token
+  if(token){
+    if(to.path === '/login'){
+      next('/')
+    }else{
+      let hasUserInfo = !!store.state.user.userInfo.nickName
+      if(hasUserInfo){
+        next()
+      }else{
+        try {
+          await store.dispatch('getUserInfo')
+          next()
+        } catch (error) {
+          alert('token过期了')
+          store.dispatch('resetUserInfo')
+          next('/login?redirect='+to.path)
+        }
+      }
+      
+    }
+  }else{
+    next()
+  }
+})
+/* router.beforeEach((to, from, next) => {
+  // ...
+  next()
+}) */
+
+export default router
