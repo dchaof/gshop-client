@@ -131,3 +131,34 @@ export const reqUserLogout = ()=>{
         method:'get'
     })
 }
+
+//获取订单交易页信息
+// /api/order/auth/trade
+//get
+export const reqTradeInfo = ()=>{
+    return ajax({
+        url:'/order/auth/trade',
+        method:'get'
+    })
+}
+
+//获取收货地址
+//http://localhost:8081/api/user/userAddress/auth/findUserAddressList
+//get
+export const reqUserAddressList = ()=>{
+    return ajax({
+        url:'/user/userAddress/auth/findUserAddressList',
+        method:'get'
+    })
+}
+
+//提交订单
+//  /api/order/auth/submitOrder?tradeNo={tradeNo}
+// post
+export const reqSubmitOrder = (tradeNo,tradeData)=>{
+    return ajax({
+        url:`/order/auth/submitOrder?tradeNo=${tradeNo}`,
+        method:'post',
+        data:tradeData
+    })
+}
