@@ -84,16 +84,18 @@
 
 <script>
   import QRCode from 'qrcode'
+  
   export default {
     name: 'Pay',
     data(){
       return {
         orderNo:'',
-        payInfo:{}
+        payInfo:{},
+        payStatus:0,
       }
     },
     methods:{
-
+      
       
       async getPayInfo(){
         let result = await this.$API.reqPayInfo(this.orderNo)
@@ -104,6 +106,7 @@
       //支付二维码弹窗
       async pay(){
         try {
+          
           let imgUrl = await QRCode.toDataURL(this.payInfo.codeUrl)
           this.$alert(`<img src='${imgUrl}'/>`, '请使用微信二维码支付', {
             dangerouslyUseHTMLString: true,
@@ -111,8 +114,44 @@
             showCancelButton:true,
             cancelButtonText:'支付遇到问题',
             confirmButtonText:'我已支付成功',
-            center:true
-          });
+            center:true,
+            beforeClose:(action, instance, done)=>{
+              if(action === 'confirm'){
+                if(this.payStatus !== 200){
+                  this.$message.success('请确保支付成功，支付成功会自动跳转')
+
+                  //后门
+                  clearInterval(this.timer)
+                  this.timer = null
+                  done()
+                  this.$router.push('/paysuccess')
+                }
+              }else if(action === 'cancel'){
+                this.$message.error('请联系开发人员')
+                clearInterval(this.timer)
+                this.timer = null
+                done()
+
+              }
+            }
+          })
+          .then()//点击确认按钮的操作
+          .catch()//点击取消按钮的操作
+          //无论是点击确认按钮还是取消按钮都会强制关闭弹窗
+
+          if(!this.timer){
+            this.timer = setInterval(async ()=>{
+                let result = await this.$API.reqPayStatus(this.orderNo)
+                if(result.code === 200){
+                  clearInterval(this.timer)
+                  this.timer = null
+                  this.payStatus = 200
+                  this.$msgbox.close()
+                  this.$router.push('/paysuccess')
+                }
+            },2000)
+          }
+
         } catch (err) {
           console.error(err)
         }
