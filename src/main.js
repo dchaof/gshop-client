@@ -5,6 +5,7 @@ import store from '@/store'
 import TypeNav from '@/components/TypeNav'
 import Pagination from '@/components/Pagination'
 import './plugins/swiper'
+import './plugins/element'
 import './mock/mockServer'
 import * as API from '@/api'
 Vue.config.productionTip = false
