@@ -83,6 +83,7 @@
 </template>
 
 <script>
+  import QRCode from 'qrcode'
   export default {
     name: 'Pay',
     data(){
@@ -92,6 +93,8 @@
       }
     },
     methods:{
+
+      
       async getPayInfo(){
         let result = await this.$API.reqPayInfo(this.orderNo)
         if(result.code === 200){
@@ -99,10 +102,22 @@
         }
       },
       //支付二维码弹窗
-      pay(){
-        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
-          dangerouslyUseHTMLString: true
-        });
+      async pay(){
+        try {
+          let imgUrl = await QRCode.toDataURL(this.payInfo.codeUrl)
+          this.$alert(`<img src='${imgUrl}'/>`, '请使用微信二维码支付', {
+            dangerouslyUseHTMLString: true,
+            showClose:false,
+            showCancelButton:true,
+            cancelButtonText:'支付遇到问题',
+            confirmButtonText:'我已支付成功',
+            center:true
+          });
+        } catch (err) {
+          console.error(err)
+        }
+      
+        
       }
     },
     beforeMount(){
