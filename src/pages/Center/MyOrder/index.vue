@@ -95,13 +95,28 @@
             <span>&nbsp;&nbsp;&nbsp;&nbsp;共2页&nbsp;</span>
           </div>
         </div> -->
-        <Pagination 
+
+
+
+        <!-- <MyPagination 
        :currentPage='page'
        :total="total"
        :pageSize="limit"
        :showPageNo=5
        @currentChange="getMyOrderInfo"
-        />
+        /> -->
+
+        <el-pagination
+        background
+      @size-change="handleSizeChange"
+      @current-change="getMyOrderInfo"
+      :current-page="page"
+      :page-count="7"
+      :page-sizes="[3, 5, 10]"
+      :page-size="limit"
+      layout=" prev, pager, next, jumper,->, sizes,total"
+      :total="total">
+    </el-pagination>
       </div>
       
     </div>
@@ -187,6 +202,10 @@ export default {
       this.page = page
       this.getMyOrderInfo()
     } */
+    handleSizeChange(size){
+      this.limit = size
+      this.getMyOrderInfo()
+    }
   }
 };
 </script>

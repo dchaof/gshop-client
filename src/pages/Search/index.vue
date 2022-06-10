@@ -96,7 +96,7 @@
               
             </ul>
           </div>
-          <pagination
+          <MyPagination
             :currentPage="options.pageNo"
             :total="total"
             :pageSize="options.pageSize"

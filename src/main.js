@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from '@/router'
 import store from '@/store'
 import TypeNav from '@/components/TypeNav'
-import Pagination from '@/components/Pagination'
+import MyPagination from '@/components/Pagination'
 import './plugins/swiper'
 import './plugins/element'
 import './mock/mockServer'
@@ -13,7 +13,7 @@ Vue.config.productionTip = false
   // Vue.prototype.$bus = new Vue()
 //全局注册组件
 Vue.component('TypeNav',TypeNav)
-Vue.component('Pagination',Pagination)
+Vue.component('MyPagination',MyPagination)
 new Vue({
   beforeCreate(){
     Vue.prototype.$bus = this
