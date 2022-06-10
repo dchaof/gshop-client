@@ -19,7 +19,7 @@
         </table>
       </div>
       <div class="orders">
-        <table class="order-item" v-for="(order,index) in myOrderList" :key="order.id" >
+        <table class="order-item" v-for="(order) in myOrderList" :key="order.id" >
           <thead>
             <tr>
               <th colspan="5">
@@ -69,7 +69,7 @@
         </table>
       </div>
       <div class="choose-order">
-        <div class="pagination">
+        <!-- <div class="pagination">
           <ul>
             <li class="prev disabled">
               <a href="javascript:">«上一页</a>
@@ -94,8 +94,16 @@
           <div>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;共2页&nbsp;</span>
           </div>
-        </div>
+        </div> -->
+        <Pagination 
+       :currentPage='page'
+       :total="total"
+       :pageSize="limit"
+       :showPageNo=5
+       @currentChange="getMyOrderInfo"
+        />
       </div>
+      
     </div>
     <!--猜你喜欢-->
     <div class="like">
@@ -167,13 +175,18 @@ export default {
     this.getMyOrderInfo()
   },
   methods:{
-    async getMyOrderInfo(){
+    async getMyOrderInfo(page = 1){
+      this.page = page
       let result = await this.$API.reqMyOrderInfo(this.page,this.limit)
       if(result.code === 200){
         this.myOrderList = result.data.records
         this.total = result.data.total
       }
-    }
+    },
+    /* currentChange(page){
+      this.page = page
+      this.getMyOrderInfo()
+    } */
   }
 };
 </script>
