@@ -183,3 +183,13 @@ export const reqPayStatus = (orderId)=> {
         method:'get'
     })
 }
+
+//获取订单列表
+// /api/order/auth/{page}/{limit}
+// get
+export const reqMyOrderInfo = (page,limit)=> {
+    return ajax({
+        url:`/order/auth/${page}/${limit}`,
+        method:'get'
+    })
+}

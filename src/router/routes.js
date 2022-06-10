@@ -11,6 +11,8 @@ import Trade from '@/pages/Trade'
 import Pay from '@/pages/Pay'
 import PaySuccess from '@/pages/PaySuccess'
 import Center from '@/pages/Center'
+import GroupOrder from '@/pages/Center/GroupOrder'
+import MyOrder from '@/pages/Center/MyOrder'
 
 export default [
     {
@@ -23,7 +25,18 @@ export default [
     },
     {
         path:'/center',
-        component:Center
+        component:Center,
+        redirect:'/center/myorder',
+        children:[
+            {
+                path:'myorder',
+                component:MyOrder
+            },
+            {
+                path:'grouporder',
+                component:GroupOrder
+            }
+        ]
     },
     {
         path:'/trade',
