@@ -13,6 +13,8 @@ import PaySuccess from '@/pages/PaySuccess'
 import Center from '@/pages/Center'
 import GroupOrder from '@/pages/Center/GroupOrder'
 import MyOrder from '@/pages/Center/MyOrder'
+import store from '@/store'
+
 
 export default [
     {
@@ -65,7 +67,15 @@ export default [
         meta:{
             //是否隐藏底部
             isHideFooter:true
-        }
+        },
+        /* beforeEnter: (to, from,next) => {
+            let token = store.state.user.token
+            if(token){
+                next('/')
+            }else{
+                next()
+            }
+        } */
     },
     {
         path:'/register',

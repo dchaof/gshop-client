@@ -64,7 +64,8 @@ router.beforeEach(
   let token = store.state.user.token
   if(token){
     if(to.path === '/login'){
-      next('/')
+      /* next('/') */
+      next()
     }else{
       let hasUserInfo = !!store.state.user.userInfo.nickName
       if(hasUserInfo){
@@ -82,7 +83,13 @@ router.beforeEach(
       
     }
   }else{
-    next()
+    if(to.path.indexOf('/pay') === 0 || to.path.startsWith('/center') || to.path.startsWith('/trade')){
+      next('/login?redirect='+to.path)
+    }else{
+      next()
+    }
+    // next()
+    
   }
 })
 /* router.beforeEach((to, from, next) => {
