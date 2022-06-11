@@ -19,11 +19,27 @@ import store from '@/store'
 export default [
     {
         path:'/pay',
-        component:Pay
+        component:Pay,
+        beforeEnter: (to, from, next) => {
+            // ...
+            if(from.path === '/trade'){
+                next()
+            }else{
+                next('/')
+            }
+          }
     },
     {
         path:'/paysuccess',
-        component:PaySuccess
+        component:PaySuccess,
+        beforeEnter: (to, from, next) => {
+            // ...
+            if(from.path === '/pay'){
+                next()
+            }else{
+                next('/')
+            }
+          }
     },
     {
         path:'/center',
@@ -42,7 +58,15 @@ export default [
     },
     {
         path:'/trade',
-        component:Trade
+        component:Trade,
+        beforeEnter: (to, from, next) => {
+            // ...
+            if(from.path === '/shopCart'){
+                next()
+            }else{
+                next('/')
+            }
+          }
     },
     {
         path:'/shopCart',
@@ -51,6 +75,16 @@ export default [
     {
         path:'/addCartSuccess',
         component:AddCartSuccess ,
+        beforeEnter: (to, from, next) => {
+            // ...
+            let skuNum = to.query.skuNum
+            let skuInfo = sessionStorage.getItem('SKUINFO_KEY')
+            if(skuNum && skuInfo){
+                next()
+            }else{
+                next('/')
+            }
+        }
     },
     {
         path:'/detail/:skuId',
