@@ -17,11 +17,17 @@
             <form action="##">
               <div class="input-text clearFix">
                 <span></span>
-                <input type="text" placeholder="邮箱/用户名/手机号" v-model="phone">
+                <!-- <input type="text" placeholder="邮箱/用户名/手机号" v-model="phone"> -->
+                 <input v-model="phone" name="phone" placeholder="邮箱/用户名/手机号" v-validate="{required: true,regex: /^1\d{10}$/}" 
+                      :class="{invalid: errors.has('phone')}">
+                <i class="error-msg">{{ errors.first('phone') }}</i>
               </div>
               <div class="input-text clearFix">
                 <span class="pwd"></span>
-                <input type="text" placeholder="请输入密码" v-model="password">
+                <!-- <input type="text" placeholder="请输入密码" v-model="password"> -->
+                <input v-model="password" name="password" placeholder="请输入密码" v-validate="{required: true,regex: /\w{6,15}$/}" 
+                      :class="{invalid: errors.has('password')}">
+                <i class="error-msg">{{ errors.first('password') }}</i>
               </div>
               <div class="setting clearFix">
                 <label class="checkbox inline">
@@ -92,14 +98,17 @@
       async userLogin(){
         let {phone,password} = this
         if(phone&&password){
-          //发送请求
-          try {
-            await this.$store.dispatch('userLogin',{phone,password})
-            alert('登录成功')
-            let redirect = this.$route.query.redirect || '/'
-            this.$router.push(redirect)
-          } catch (error) {
-            alert(error.message)            
+          const success = await this.$validator.validateAll() // 对所有表单项进行验证
+          if(success){
+            //发送请求
+            try {
+              await this.$store.dispatch('userLogin',{phone,password})
+              alert('登录成功')
+              let redirect = this.$route.query.redirect || '/'
+              this.$router.push(redirect)
+            } catch (error) {
+              alert(error.message)            
+            }
           }
 
         }
@@ -184,6 +193,10 @@
                 background: url(../../assets/images/icons.png) no-repeat -10px -201px;
                 box-sizing: border-box;
                 border-radius: 2px 0 0 2px;
+              }
+
+              i {
+                color: red;
               }
 
               .pwd {
